@@ -8,13 +8,14 @@ for (let i=0 ; i<products.length ; i++){
 
     // Récupération de l'élément du DOM qui accueillera les items
     const sectionItems = document.querySelector(".items");
-
+    
     // Création d’une balise dédiée à produit
     const articleItems = document.createElement("article");
 
     // Création des balises
     const imageProduct = document.createElement("img");
     imageProduct.src = product.imageUrl;
+    imageProduct.alt = product.altTxt;
 
     const productName = document.createElement("h3");
     productName.innerText = product.name;
@@ -25,6 +26,7 @@ for (let i=0 ; i<products.length ; i++){
 
     // On rattache la balise product a la section Items
     sectionItems.appendChild(articleItems);
+    
     articleItems.appendChild(imageProduct);
     articleItems.appendChild(productName);
     articleItems.appendChild(productDescription);

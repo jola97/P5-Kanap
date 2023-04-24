@@ -1,33 +1,23 @@
 // Récupération des produits depuis le fichier "Product.js"
-const reponse = await fetch('http://localhost:3000/api/products');
-const products = await reponse.json();
+const urlProducts = "http://localhost:3000/api/products";
+const container = document.getElementById("items");
 
-for (let i=0 ; i<products.length ; i++){
-
-    const product = products[i];
-
-    // Récupération de l'élément du DOM qui accueillera les items
-    const sectionItems = document.querySelector(".items");
-    
-    // Création d’une balise dédiée à produit
-    const articleItems = document.createElement("article");
-
-    // Création des balises
-    const imageProduct = document.createElement("img");
-    imageProduct.src = product.imageUrl;
-    imageProduct.alt = product.altTxt;
-
-    const productName = document.createElement("h3");
-    productName.innerText = product.name;
-
-    const productDescription = document.createElement("p");
-    productDescription.innerText = product.description;
-
-
-    // On rattache la balise product a la section Items
-    sectionItems.appendChild(articleItems);
-    
-    articleItems.appendChild(imageProduct);
-    articleItems.appendChild(productName);
-    articleItems.appendChild(productDescription);
+const getProducts = () => {
+    fetch(urlProducts)
+    .then(function(res) {
+        return res.json()
+    })
+    .then(function (products) {
+        for(product in products) {
+            container.innerHTML += `<a href="${products[product]._id}">
+            <article>
+              <img src="${products[product].imageUrl}" alt="${products[product].altTxt}">
+              <h3 class="productName">${products[product].name}</h3>
+              <p class="productDescription">${products[product].description}</p>
+            </article>
+          </a>`
+        }
+    })
 }
+
+getProducts();

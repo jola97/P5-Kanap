@@ -1,23 +1,18 @@
-// Récupération des produits depuis le fichier "Product.js"
-const urlProducts = "http://localhost:3000/api/products";
-const container = document.getElementById("items");
+const containerItems = document.getElementById("items");
 
-const getProducts = () => {
-    fetch(urlProducts)
-    .then(function(res) {
-        return res.json()
-    })
-    .then(function (products) {
-        for(product in products) {
-            container.innerHTML += `<a href="${products[product]._id}">
+fetch("http://localhost:3000/api/products")
+  .then(res => res.json())
+  .then(function(data){
+    for(product in data){
+      containerItems.innerHTML += 
+      `<a href="./product.html?id=${data[product]._id}">
             <article>
-              <img src="${products[product].imageUrl}" alt="${products[product].altTxt}">
-              <h3 class="productName">${products[product].name}</h3>
-              <p class="productDescription">${products[product].description}</p>
+              <img src="${data[product].imageUrl}" alt="${data[product].altTxt}">
+              <h3 class="productName">${data[product].name}</h3>
+              <p class="productDescription">${data[product].description}</p>
             </article>
           </a>`
-        }
-    })
-}
-
-getProducts();
+    }
+  })
+  .catch((error) => console.log(error))
+  

@@ -1,67 +1,78 @@
-// // On récupère l'url courante avec son "id"
-// const idProductUrl = new URL(document.location).searchParams.get('id');
-// const idProductUrlAPI = `http://localhost:3000/api/products/${idProductUrl}`
-
-// const cartContainerItems = document.getElementById("cart__items");
-
-// let getCart = JSON.parse(localStorage.getItem("storedProducts"));
-
-// fetch("http://localhost:3000/api/products")
-//     .then(res => res.json())
-//     .then(function (storedProducts) {
-//         if(getCart){
-//             for(products of storedProducts)
-//             cartContainerItems.innerHTML +=
-//                 `<article class="cart__item" data-id="${[products._id]}" data-color="{product-color}">
-//                 <div class="cart__item__img">
-//                   <img src="${[products.imageUrl]}" alt="${[products.altTxt]}">
-//                 </div>
-//                 <div class="cart__item__content">
-//                   <div class="cart__item__content__description">
-//                     <h2>${[products.name]}</h2>
-//                     <p>Vert</p>
-//                     <p>${[products.price]} €</p>
-//                   </div>
-//                   <div class="cart__item__content__settings">
-//                     <div class="cart__item__content__settings__quantity">
-//                       <p>Qté : </p>
-//                       <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
-//                     </div>
-//                     <div class="cart__item__content__settings__delete">
-//                       <p class="deleteItem">Supprimer</p>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </article>`
-//         } else {
-
-//         }
-//         // for (product in data) {
-//         //     cartContainerItems.innerHTML +=
-//         //         `<article class="cart__item" data-id="${data[product]._id}" data-color="{product-color}">
-//         //         <div class="cart__item__img">
-//         //           <img src="${data[product].imageUrl}" alt="${data[product].altTxt}">
-//         //         </div>
-//         //         <div class="cart__item__content">
-//         //           <div class="cart__item__content__description">
-//         //             <h2>${data[product].name}</h2>
-//         //             <p>Vert</p>
-//         //             <p>${data[product].price} €</p>
-//         //           </div>
-//         //           <div class="cart__item__content__settings">
-//         //             <div class="cart__item__content__settings__quantity">
-//         //               <p>Qté : </p>
-//         //               <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
-//         //             </div>
-//         //             <div class="cart__item__content__settings__delete">
-//         //               <p class="deleteItem">Supprimer</p>
-//         //             </div>
-//         //           </div>
-//         //         </div>
-//         //       </article>`
-//         //}
-//     })
-//     .catch((error) => console.log(error))
+const containerCartItems = document.getElementById("cart__items");
+const containerCartItemsTotalQuantity = document.getElementById("totalQuantity");
+const containerCartItemsTotalPrice = document.getElementById("totalPrice");
+const idProductUrlAPI = "http://localhost:3000/api/products/"
 
 
+
+
+// On affiche les produits du localstorage en comparant 
+//les id de l'API et du local strorage
+const viewProductsInCart = () => {
+let listProductsInCart = getProductToCart();
+let listProductsInAPI = getProductInAPI();
+console.log(listProductsInAPI);
+console.log(listProductsInCart);
     
+}
+
+
+// Fonction pour récuperer les produits dans l'API
+function getProductInAPI(){
+  fetch(idProductUrlAPI)
+      .then(res => res.json())
+      .then(data => {
+        for (product in data) {
+          console.log(data[product]._id);
+        }
+    })
+}
+
+ function getProductToCart(){
+  let stockedProducts = localStorage.getItem("StockedProducts");
+   
+  if(stockedProducts === null){
+    return [];
+  } else {
+    for (item in stockedProducts){
+    return JSON.parse(stockedProducts);
+    }
+  }
+}
+
+
+
+// Fonction pour récuperer les produits dans le localstorage
+// function getProductToCart(){
+//   let stockedProducts = localStorage.getItem("StockedProducts");
+//   if(stockedProducts == null){
+//     return [];
+//   } else {
+//     return JSON.parse(stockedProducts); 
+//   }
+// }
+
+// Function pour sauvegarder les produits dans le panier(localStorage)
+// en transformant les datas en chaines de caractère
+function saveProductToCart(StockedProducts) {
+    localStorage.setItem("StockedProducts", JSON.stringify(StockedProducts));
+}
+
+
+function addProductToCart(product) {
+    // On récupère le panier
+    let listProductsInCart = getProductToCart();
+
+    //On cherche dans le panier si il y a un produit dont l'id est égale à l'id du produit à ajouter 
+    let foundProduct = listProductsInCart.find(element => {
+        return element.id == product.id && element.color == product.color;
+    });
+
+    if (foundProduct === undefined) {
+        listProductsInCart.push(product);
+    } else {
+        foundProduct.quantity += product.quantity;
+    }
+    // On enregistre le nouveau panier    
+    saveProductToCart(listProductsInCart);
+}

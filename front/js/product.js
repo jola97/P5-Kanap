@@ -3,8 +3,8 @@ const idProductUrl = new URL(document.location).searchParams.get('id');
 const idProductUrlAPI = `http://localhost:3000/api/products/${idProductUrl}`
 
 // Affichage du produit sélectionné depuis la page d'accueil
-const getOneArticle = () => {
-    fetch(idProductUrlAPI)
+async function getOneArticle(){
+    await fetch(idProductUrlAPI)
         .then(res => res.json())
         .then(data => {
             console.log(data);

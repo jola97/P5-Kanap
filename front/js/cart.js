@@ -1,19 +1,19 @@
 const idProductUrlAPI = "http://localhost:3000/api/products/"
 
 
-// Fonction pour récuperer les produits de l'API
+//******************** Fonction pour récuperer les produits de l'API ********************//
 async function getProductsAPI(){
     let responseAPI = await fetch(idProductUrlAPI);
     let listproductsAPI = await responseAPI.json();
         return listproductsAPI;
 }
 
-// Fonction pour récuperer les produits du panier (localStorage)
+//******************** Fonction pour récuperer les produits du panier (localStorage) ********************//
 function getProductsCart(){
   return JSON.parse(localStorage.getItem("StockedProducts"));
 }
 
-/**
+/**********************
  * On compare les éléments de l'API avec ceux du LS pat l'id pr récuperer
  * toutes les informations de chaque produit
  * @param {Object []} item 
@@ -44,7 +44,7 @@ function compareItemsLSAPI(item, cartProductItems) {
 const currentLS = [];
 console.log(currentLS);
 
-// On affiche les produits du panier en le parcourant
+//******************** On affiche les produits du panier en le parcourant ********************//
 async function displayCart(){
 
   const items = await getProductsAPI();
@@ -55,7 +55,7 @@ async function displayCart(){
   
   for (product in currentLS){
     const containerCartItems = document.getElementById("cart__items")
-    containerCartItems.innerHTML += `<article class="cart__item" data-id="${currentLS[product]._id}" data-color="${currentLS[product].color}">
+    containerCartItems.innerHTML += `<article class="cart__item" data-id="${currentLS[product].id}" data-color="${currentLS[product].color}">
                 <div class="cart__item__img">
                   <img src="${currentLS[product].imgUrl}" alt="${currentLS[product].altTxt}">
                 </div>
@@ -77,30 +77,32 @@ async function displayCart(){
                 </div>
               </article>`
   }
-
+  getTotalQuantityProduct()
+  getTotalPriceProduct() // Affichage du prix total
+  updateQuantityAndPrice() // Mise à jour de la quantité et du prix total après changement de la quantité
+  removeFromCart() // Suppression d'un produit
+  
 }
 // Appel de la fonction pour afficher le panier
 displayCart()
 
-// Affichage de la quantité total des produits
-const totalQuantity = document.getElementById("totalQuantity");
-totalQuantity.innerText = getTotalQuantityProduct()
+//******************** Calcul et affichage de la quantité total des produits ********************//
 
-function getTotalQuantityProduct(){
-    let itemQuantity = getProductsCart();
-    let number = 0;
-  if (itemQuantity){
-    for (let product of itemQuantity){
-      number += product.quantity
-    }
-  } else {
-    console.log("Panier vide");
+//totalQuantity.innerText = getTotalQuantityProduct()
+
+function getTotalQuantityProduct() {
+  const totalQuantity = document.querySelector("#totalQuantity");
+  let nbrProducts = getProductsCart();
+  let sum = 0;
+
+  for(let i = 0 ; i < nbrProducts.length; i++){
+    sum += parseInt(nbrProducts[i].quantity)
+    console.log(parseInt(sum));
+    totalQuantity.textContent = parseInt(sum)
   }
-    console.log(number + " articles");
-    return number
 }
 
-// Calcul du prix total de chaque produit et Affichage du prix total des produits
+//******************** Calcul du prix total de chaque produit et Affichage du prix total des produits ********************//
 async function getTotalPriceProduct() {
   let items = await getProductsAPI();
   let currentLS = [];
@@ -112,7 +114,7 @@ async function getTotalPriceProduct() {
     let resultatPriceQuantity = items.price * items.quantity
     totalOfEachProduit.push(resultatPriceQuantity)
 
-    console.log("Prix de chaque produit par la quantié : "+items.price + "€" + " x " +
+    console.log("Prix de chaque produit par la quantité : "+items.price + "€" + " x " +
      items.quantity + " quantité(s)" + " = " + resultatPriceQuantity + "€");
   }
   console.log(totalOfEachProduit);
@@ -125,16 +127,15 @@ async function getTotalPriceProduct() {
   const totalPrice = document.getElementById("totalPrice");
   totalPrice.innerText = sumTotalPriceProduct
   console.log("Le prix total de la commande est de " + sumTotalPriceProduct +"€" );
-  
 }
-getTotalPriceProduct()
 
-// Fonction pour supprimer un produit
+
+//******************** Fonction pour supprimer un produit ********************//
 async function removeFromCart(){
 
   //On récupère le localStorage actuelle
   const items = await getProductsAPI();
-  //const currentLS = [];
+  const currentLS = [];
   compareItemsLSAPI(items, currentLS)
   console.log(currentLS);
 
@@ -153,11 +154,34 @@ async function removeFromCart(){
     })
   }
 }
-removeFromCart()
- 
 
 
-// Function pour sauvegarder les produits dans le panier(localStorage)
+//******************** Mise à jour du prix total lors du changement de la quantité ********************//
+
+function updateQuantityAndPrice(){
+  const cartIdAndColor = document.querySelectorAll(".cart__item")
+  cartIdAndColor.forEach((cartIdAndColor) => {
+    cartIdAndColor.addEventListener("change", (e) => {
+      let cartCurrent = JSON.parse(localStorage.getItem("StockedProducts"));
+      for(product of cartCurrent){
+        if(
+          product.id === cartIdAndColor.dataset.id &&          
+          product.color === cartIdAndColor.dataset.color
+          ) {
+          product.quantity = e.target.value;
+          localStorage.StockedProducts = JSON.stringify(cartCurrent);
+          cartIdAndColor.dataset.quantity = e.target.value
+          console.log("id : " + product.id + " - color : " + product.color + " quantité : " + e.target.value);
+          getTotalPriceProduct()
+          getTotalQuantityProduct()
+        } 
+      }
+    })
+  });
+}
+
+
+//******************** Function pour sauvegarder les produits dans le panier(localStorage) ********************//
 // en transformant les datas en chaines de caractère
 function saveProductToCart(StockedProducts) {
     localStorage.setItem("StockedProducts", JSON.stringify(StockedProducts));

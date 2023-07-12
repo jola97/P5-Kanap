@@ -8,7 +8,8 @@ async function getOneProduct() {
         .then(res => res.json())
         .then(data => {
             console.log(data);
-
+            
+            // On crée l'élement img et le lie dans la page product.htlm
             const getImage = document.createElement("img")
             document.querySelector(".item__img").appendChild(getImage);
             getImage.src = data.imageUrl
@@ -30,7 +31,6 @@ async function getOneProduct() {
         })
 }
 console.log(idProductUrl);
-
 getOneProduct();
 
 // Evenement > Ecoute du choix de la couleur
@@ -84,6 +84,7 @@ function getProductToCart() {
     }
 }
 
+// Fonction qui permet d'ajouter un produit dans le localstorage en vérifiant si l'id et la couleur correspondent
 function addProductToCart(product) {
     // On récupère le panier
     let listProductsInCart = getProductToCart();

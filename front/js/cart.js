@@ -1,7 +1,5 @@
-const idProductUrlAPI = "http://localhost:3000/api/products/"
-
-
 //******************** Fonction pour récuperer les produits de l'API ********************//
+const idProductUrlAPI = "http://localhost:3000/api/products/"
 async function getProductsAPI() {
   let responseAPI = await fetch(idProductUrlAPI);
   let listproductsAPI = await responseAPI.json();
@@ -88,7 +86,6 @@ async function displayCart() {
 displayCart()
 
 //******************** Calcul et affichage de la quantité total des produits ********************//
-
 function getTotalQuantityProduct() {
   const totalQuantity = document.querySelector("#totalQuantity");
   let nbrProducts = getProductsCart();
@@ -157,7 +154,6 @@ async function removeFromCart() {
 
 
 //******************** Mise à jour du prix total lors du changement de la quantité ********************//
-
 function updateQuantityAndPrice() {
   const cartIdAndColor = document.querySelectorAll(".cart__item")
   cartIdAndColor.forEach((cartIdAndColor) => {
@@ -179,7 +175,6 @@ function updateQuantityAndPrice() {
     })
   });
 }
-
 
 //******************** Function pour sauvegarder les produits dans le panier(localStorage) ********************//
 // en transformant les datas en chaines de caractère
@@ -229,7 +224,7 @@ inputlastName.addEventListener("change", function () {
 let inputlastNameErrorMsg = document.getElementById("lastNameErrorMsg")
 // On crée une fonction pour vérifier le prénom en utilisant le RegExp
 let inputlastNameControl = (inputlastName) => {
-  // On teste le nom
+  // Vérification de l'input : valeur vide ou présence de caractères non autorisés
   if (inputlastName.value.trim() == "") {
     inputlastNameErrorMsg.innerText = "Le champs nom est requis"
     inputlastNameErrorMsg.style = "color : none"
@@ -329,8 +324,8 @@ const dataLSUserInformation = localStorage.getItem("userInformation")
 
 // Transforme "dataLSUserInformation" en objet
 const dataLSUserInformationObj = JSON.parse(dataLSUserInformation)
-// console.log(userInformationLSObj);
 
+// Fonction qui permet de garder en mémoire les input du formulaire meme en changeant de page 
 function autoInputForm(input) {
   if (dataLSUserInformation == null) {
     console.log("Pas d'utilisateur dans le localStorage");
@@ -345,9 +340,8 @@ autoInputForm("city");
 autoInputForm("email");
 
 //******************** Récupération des IDs dans le localStorage ********************//
-
 let arrayIdLS = [];
-function showIds(){
+function showIds() {
   let cartlistIds = document.querySelectorAll(".cart__item")
   cartlistIds.forEach(cartlistIds => {
     console.log(cartlistIds.dataset.id);
@@ -357,9 +351,6 @@ function showIds(){
 
 console.log(arrayIdLS);
 //******************** Bouton "Commander" ********************//
-// On récupère les produits du localStorage
-//const registeredProducts = getProductsCart();
-
 // On ajoute un évènement sur le bouton "Commander"
 const btnOrder = document.getElementById("order")
 btnOrder.addEventListener("click", (e) => {
@@ -374,7 +365,7 @@ btnOrder.addEventListener("click", (e) => {
     email: document.querySelector("#email").value
   }
   console.log(userInformation)
-
+  // On vérifie la validité des inputs du formulaire avant enregistrement dans le LS
   if (inputFirstNameControl(inputFirstName) &&
     inputlastNameControl(inputlastName) &&
     inputAddressControl(inputAddress) &&
@@ -400,27 +391,26 @@ btnOrder.addEventListener("click", (e) => {
       products: arrayIdLS
     }
     return infoContactProduct
-  }  
+  }
 
+  // On envoi le formulaire et les articles sur le serveur qui retourne un numéro de commande
   const infoToServ = sendInfoToServ()
-  fetch('http://localhost:3000/api/products/order',{
+  fetch('http://localhost:3000/api/products/order', {
     method: "POST",
     body: JSON.stringify(infoToServ),
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     }
   })
-    .then((res)=> res.json())
-    .then((data)=>{ 
+    .then((res) => res.json())
+    .then((data) => {
       console.log(data)
-      location.href = `confirmation.html?orderId=${data.orderId}` 
+      location.href = `confirmation.html?orderId=${data.orderId}`
     })
-    .catch((err)=> {
-    console.error(err);
-    alert("erreur :"+ err);
-  })
-
-
+    .catch((err) => {
+      console.error(err);
+      alert("erreur :" + err);
+    })
 })
 
 

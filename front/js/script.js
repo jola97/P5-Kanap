@@ -1,3 +1,4 @@
+// On selectionne l'élement "items" de la section de la page index.html
 const containerItems = document.getElementById("items");
 
 // On récupère les produits de l'api et on les affichent
@@ -19,5 +20,4 @@ async function getAllProducts() {
     })
     .catch((error) => console.log(error))
 }
-
 getAllProducts();

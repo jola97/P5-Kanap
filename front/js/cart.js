@@ -165,11 +165,15 @@ function updateQuantityAndPrice() {
           product.color === cartIdAndColor.dataset.color
         ) {
           product.quantity = e.target.value;
+          if (product.quantity > 1 && product.quantity < 101){
           localStorage.StockedProducts = JSON.stringify(cartCurrent);
           cartIdAndColor.dataset.quantity = e.target.value
           console.log("id : " + product.id + " - color : " + product.color + " quantité : " + e.target.value);
           getTotalPriceProduct()
           getTotalQuantityProduct()
+          } else {
+            alert("Pour valider votre selection vous devez choisir une quantité entre 1 et 100")
+          }
         }
       }
     })

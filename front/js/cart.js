@@ -344,7 +344,7 @@ let arrayIdLS = [];
 function showIds() {
   let cartlistIds = document.querySelectorAll(".cart__item")
   cartlistIds.forEach(cartlistIds => {
-    console.log(cartlistIds.dataset.id);
+    console.log("Id du produit : "+cartlistIds.dataset.id);
     return arrayIdLS.push(cartlistIds.dataset.id)
   })
 }

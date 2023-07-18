@@ -369,8 +369,10 @@ btnOrder.addEventListener("click", (e) => {
     email: document.querySelector("#email").value
   }
   console.log(userInformation)
-  // On vérifie la validité des inputs du formulaire avant enregistrement dans le LS
-  if (inputFirstNameControl(inputFirstName) &&
+  // On vérifie si le panier est vide et la validité des inputs du formulaire avant enregistrement dans le LS
+  if (localStorage.length == 0){
+    return alert("Votre panier est vide")
+  } else if (inputFirstNameControl(inputFirstName) &&
     inputlastNameControl(inputlastName) &&
     inputAddressControl(inputAddress) &&
     inputCityControl(inputCity) &&

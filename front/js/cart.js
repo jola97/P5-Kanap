@@ -370,7 +370,8 @@ btnOrder.addEventListener("click", (e) => {
   }
   console.log(userInformation)
   // On vérifie si le panier est vide et la validité des inputs du formulaire avant enregistrement dans le LS
-  if (localStorage.length == 0){
+  let emptyLS = localStorage.StockedProducts
+  if (localStorage.length == 0 || emptyLS == '[]'){
     return alert("Votre panier est vide")
   } else if (inputFirstNameControl(inputFirstName) &&
     inputlastNameControl(inputlastName) &&

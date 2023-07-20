@@ -165,7 +165,7 @@ function updateQuantityAndPrice() {
           product.color === cartIdAndColor.dataset.color
         ) {
           product.quantity = e.target.value;
-          if (product.quantity > 1 && product.quantity < 101){
+          if (product.quantity > 0 && product.quantity < 101){
           localStorage.StockedProducts = JSON.stringify(cartCurrent);
           cartIdAndColor.dataset.quantity = e.target.value
           console.log("id : " + product.id + " - color : " + product.color + " quantité : " + e.target.value);

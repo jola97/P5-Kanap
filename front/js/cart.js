@@ -141,8 +141,10 @@ async function removeFromCart() {
     deleteItem[i].addEventListener("click", () => {
 
       let idSelectDelete = currentLS[i].id
-      console.log("L'id sélectionner pour la supression du produit est : " + idSelectDelete);
-      let currentLSFilter = currentLS.filter(el => el.id !== idSelectDelete)
+      let colorSelectDelete = currentLS[i].color
+      console.log(colorSelectDelete);
+      console.log("L'id sélectionner pour la supression du produit est : " + idSelectDelete + " avec la couleur : " + colorSelectDelete);
+      let currentLSFilter = currentLS.filter((el => el.id !== idSelectDelete) && (p => p.color !== colorSelectDelete))
       console.log(currentLSFilter);
       saveProductToCart(currentLSFilter)
 
@@ -190,7 +192,7 @@ function saveProductToCart(StockedProducts) {
 /********************************************** FORMULAIRE *****************************************************/
 /***************************************************************************************************************/
 
-//******************** Fistname & firstName message error ********************//
+//******************** Firstname & firstName message error ********************//
 // Déclare variable pour le controle des noms, prénoms et ville
 let inputFirstNamelastNameCityRegExp = new RegExp(/^[a-zA-ZÀ-ÿ]{2,20}(?:[\s-][a-zA-ZÀ-ÿ]+)*$/)
 
